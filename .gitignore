@@ -1,0 +1,7 @@
+/model/
+hfd.sh
+outputs*/
+data/
+*.egg-info/
+__pycache__/
+*.zip
