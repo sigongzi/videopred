@@ -28,9 +28,9 @@ def sample_next_frame(model, original_img, cond, steps):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data-root", type=str, default="/data1/sijiaqi/instructpix2pix/data/final_train_test/test_frames")
-    parser.add_argument("--checkpoint_dir", type=str, default="/data1/sijiaqi/instructpix2pix/outputs/20251123-134058/final")
-    parser.add_argument("--base_model", type=str,default="/data1/sijiaqi/instructpix2pix/model/instruct-pix2pix")
+    parser.add_argument("--data-root", type=str, default="/data1/sijiaqi/videopred/data/final_train_test/test_frames")
+    parser.add_argument("--checkpoint_dir", type=str, default="/data1/sijiaqi/videopred/outputs/20251123-134058/final")
+    parser.add_argument("--base_model", type=str,default="/data1/sijiaqi/videopred/model/instruct-pix2pix")
     parser.add_argument("--output", type=str, required=True)
     parser.add_argument("--num-frames", type=int, default=20)
     parser.add_argument("--resolution", type=int, default=96)
@@ -66,7 +66,7 @@ def main():
 
     use_sample_number = args.max_number if args.max_number is not None else len(ds) 
     with h5py.File(args.output, "w") as f:
-        d_images = f.create_dataset("images", shape=(n_samples, T, H, W, 3), dtype=np.uint8)
+        #d_images = f.create_dataset("images", shape=(n_samples, T, H, W, 3), dtype=np.uint8)
         d_target = f.create_dataset("target", shape=(n_samples, H, W, 3), dtype=np.uint8)
         d_generated = f.create_dataset("generated", shape=(n_samples, H, W, 3), dtype=np.uint8)
         d_prompt = f.create_dataset("prompt", shape=(n_samples,), dtype=str_dt)
@@ -78,22 +78,22 @@ def main():
             prompt = item["prompt"]
 
             
-            print(f"The prompt is {prompt}")
+            #print(f"The prompt is {prompt}")
 
             gen = model.predict(video, prompt)
 
 
-            print(f"max value of gen {gen.max().item()}")
-            print(f"min value of gen {gen.min().item()}")
-            print(f"min value of target {target.min().item()}")
-            print(f"max value of target {target.max().item()}")
+            #print(f"max value of gen {gen.max().item()}")
+            #print(f"min value of gen {gen.min().item()}")
+            #print(f"min value of target {target.min().item()}")
+            #print(f"max value of target {target.max().item()}")
             vid_np = to_uint8(item["video"].permute(0, 2, 3, 1))
             tgt_np = to_uint8(item["target"].permute(1, 2, 0).unsqueeze(0))[0]
             gen_np = to_uint8(gen[0].permute(1, 2, 0).unsqueeze(0))[0]
 
-            print(f"tgt_np:{tgt_np}")
-            print(f"gen_np:{gen_np}")
-            d_images[i] = vid_np
+            #print(f"tgt_np:{tgt_np}")
+            #print(f"gen_np:{gen_np}")
+            #d_images[i] = vid_np
             d_target[i] = tgt_np
             d_generated[i] = gen_np
             d_prompt[i] = prompt
